@@ -12,24 +12,28 @@ skills/
 
 ## Maintenance
 
-The skills from thirdparties are added as git subtrees, which making pulling from this repository simple. 
+Third-party skills are added as git subtrees. Matt Pocock's repo has its skills under an upstream `skills/` folder, so we split that path first and mount only those contents at `skills/mattpocock/`.
 
-First you need to set up the additional upstream repositories
+Set up the upstream remote once:
 
 ```sh
 git remote add mattpocock https://github.com/mattpocock/skills.git
 git fetch mattpocock
 ```
 
-Then you can pull the latest version in repository
+Split the upstream `skills/` folder, then add or pull it:
 
 ```sh
-git subtree pull \
-  --prefix=skills/mattpocock \
-  mattpocock \
-  main 
+git fetch mattpocock
+git subtree split --prefix=skills -b mattpocock-skills-only mattpocock/main
+
+# First install:
+git subtree add --prefix=skills/mattpocock mattpocock-skills-only
+
+# Later updates:
+git subtree pull --prefix=skills/mattpocock mattpocock-skills-only
+
+git branch -D mattpocock-skills-only
 ```
 
-On first install use `git subtree add` instead of `pull`. 
- 
-In case of "working tree has modifications" use the `git update-index --refresh` to resolve.
+If git complains that the working tree has modifications, run `git update-index --refresh` and retry.
