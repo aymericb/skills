@@ -8,6 +8,7 @@
         },
         "ghcr.io/devcontainers/features/git:1": {}
     },
+    "postCreateCommand": "bash .devcontainer/install-git-subtree.sh",
     "customizations": {
         "vscode": {
             "extensions": ["EditorConfig.EditorConfig"]
