@@ -1,0 +1,4 @@
+# On Mac
+./devseal/host.sh serve
+# On Container
+source <(./devseal/unseal.sh)

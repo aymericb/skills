@@ -4,6 +4,12 @@ I make no promise that this will work out for you; use at your own risks.
 
 ## Organization
 
+```
+skills/
+├── aymeric/      # My own skills
+├── mattpocock/   # Matt Pocock skills from https://github.com/mattpocock/skills.git
+```
+
 ## Maintenance
 
 The skills from thirdparties are added as git subtrees, which making pulling from this repository simple. 
@@ -21,8 +27,9 @@ Then you can pull the latest version in repository
 git subtree pull \
   --prefix=skills/mattpocock \
   mattpocock \
-  main \
-  --squash
+  main 
 ```
 
 On first install use `git subtree add` instead of `pull`. 
+ 
+In case of "working tree has modifications" use the `git update-index --refresh` to resolve.
