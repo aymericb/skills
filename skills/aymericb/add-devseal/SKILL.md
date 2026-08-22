@@ -4,11 +4,11 @@ description: Add the devseal scripts to support encrypted secrets in containers 
 disable-model-invocation: true
 ---
 
-# Add deveal
+# Add devseal
 
-This skill installs scripts in a `devseal` directory, which are used to supporte encrypted secrets via age, that can only be decrypted using the `age-plugin-se` and secure enclave on the host Mac.
+This skill installs scripts in a `devseal` directory, which are used to support encrypted secrets via age, that can only be decrypted using the `age-plugin-se` and secure enclave on the host Mac.
 
-Templates live beside this file under [`templates/`](templates/). 
+Templates live beside this file under [`templates/`](templates/).
 
 For wire protocol and Mac age setup detail, see [`reference.md`](reference.md).
 
@@ -18,7 +18,7 @@ The purpose of `devseal` is to ensure the following security model:
 - The secrets are always encrypted at rest
 - The secrets are temporarily retrieved in the context of a dev container
 - The secrets can only be decrypted with user interaction, using Touch ID, on the host
-- The key is stored in the secure enclave which would make "caching" future interaction difficult to achive
+- The key is stored in the secure enclave which would make "caching" future interaction difficult to achieve
 
 The deployment of devseal assumes that:
 - The main environment that is used in a Linux Dev Containers
@@ -42,15 +42,51 @@ Look at the target repo. Read what exists; don't assume:
 
 ### 2. Present findings and ask
 
-Summarise what's present and what's missing. Lead each choice with the recommended answer so the user can accept in a word. Skip a question when exploration already settled it.
+Use exploration only to **prefill recommendations**. Always present the full plan for confirmation, even when defaults seem obvious.
 
-- **Secrets path** — default **`secrets/secrets.env.age`**. If a `terraform/` layout already exists, prefer **`terraform/secrets.env.age`**. 
-- **Recipients file** — sibling **`recipients.txt`** next to the age file.
-- **Install `devseal/` at repo root** — **yes**.
-- **Wire Dev Container mount + `DEVSEAL_HOST`** — **yes**.
+The only exception: the user already stated a preference earlier in this conversation — quote it back when applying it.
+
+Summarise what's present and what's missing, then ask using **AskQuestion** when available (otherwise ask conversationally). Prefill the recommended option in each question:
+
+  | Question                              | Options                                                        |
+  |---------------------------------------|----------------------------------------------------------------|
+  | Where should `secrets.env.age` live?  | `secrets/secrets.env.age` (default), `terraform/secrets.env.age`, custom path |
+  | Where should `devseal/` be installed? | repo root (default), other                                     |
+  | Wire Dev Container mount + `DEVSEAL_HOST`? | yes (default), no                                         |
+  | Encrypt now?                          | scaffold only (default), encrypt now (Mac steps)               |
+
+Recommendation rules (for prefilling, not for skipping confirmation):
+- **Secrets path** — default `secrets/secrets.env.age`. If a `terraform/` layout already exists, prefer `terraform/secrets.env.age`.
+- **Recipients file** — sibling `recipients.txt` next to the age file.
+- **Install `devseal/` at repo root** — yes.
+- **Wire Dev Container mount + `DEVSEAL_HOST`** — yes.
 - **Encrypt now** — only if the user already has a plaintext `secrets.env` (or is ready to paste values). Otherwise scaffold ignore + encrypt docs and leave ciphertext for later.
 
-**Done when:** every choice above is answered (or skipped with a recorded default).
+Also show this summary and **wait for explicit approval** before step 3:
+
+```markdown
+## Proposed devseal layout
+
+| Item                  | Path                        |
+|-----------------------|-----------------------------|
+|   devseal scripts     |   `devseal/` (repo root)    |
+|   Encrypted secrets   |   `<chosen path>`           |
+|   Recipients          |   `<sibling recipients.txt>`|
+|   Plaintext (gitignored) | `<sibling secrets.env>`  |
+|   Dev Container       |   mount + `DEVSEAL_HOST`    |
+
+Reply to proceed, or tell me what to change.
+```
+
+Acceptable approval: "yes", "looks good", "proceed", or choosing options via AskQuestion.
+
+**Done when:** the user has explicitly approved the proposed layout (or chosen options via AskQuestion). Exploration-only defaults do **not** satisfy this.
+
+### Gate — do not write until confirmed
+
+**STOP after presenting the plan.** Do not copy templates, patch `devcontainer.json`, or create `.gitignore` entries until the user explicitly approves the layout.
+
+If the user wants changes, update the plan and ask again. Never infer approval from exploration alone.
 
 ### 3. Write
 
@@ -78,6 +114,8 @@ Summarise what's present and what's missing. Lead each choice with the recommend
 
 ## Do not
 
+- Proceed to Write without explicit user approval of devseal location and secrets paths
+- Treat repo exploration (e.g. finding `terraform/`) as confirmation
 - Replace or generalize Dev Container itself
 - Move the SE identity into the container
 - Run `host.sh serve` from inside Linux (macOS-only)
