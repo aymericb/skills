@@ -10,6 +10,12 @@ skills/
 ├── mattpocock/   # Matt Pocock skills from https://github.com/mattpocock/skills.git
 ```
 
+## Install
+
+```sh
+npx skills@latest add aymericb/skills 
+```
+
 ## Maintenance
 
 Third-party skills are added as git subtrees. Matt Pocock's repo has its skills under an upstream `skills/` folder, so we split that path first and mount only those contents at `skills/mattpocock/`.
