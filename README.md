@@ -31,7 +31,7 @@ git subtree split --prefix=skills -b mattpocock-skills-only mattpocock/main
 git subtree add --prefix=skills/mattpocock mattpocock-skills-only
 
 # Later updates:
-git subtree pull --prefix=skills/mattpocock mattpocock-skills-only
+git subtree pull --prefix=skills/mattpocock . mattpocock-skills-only
 
 git branch -D mattpocock-skills-only
 ```

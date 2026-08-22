@@ -1,0 +1,60 @@
+{
+    "name": "aymericb",
+    "owner": {
+        "name": "Aymeric"
+    },
+    "description": "Aymeric's skills collection, including Matt Pocock skills vendored as subtrees.",
+    "plugins": [
+        {
+            "name": "aymeric-skills",
+            "source": "./",
+            "description": "Aymeric's Skills",
+            "skills": [
+                "./skills/aymericb/add-devseal"
+            ]
+        },
+        {
+            "name": "mattpocock-skills",
+            "source": "./",
+            "description": "Matt Pocock's Skills",
+            "skills": [
+                "./skills/mattpocock/engineering/ask-matt",
+                "./skills/mattpocock/engineering/code-review",
+                "./skills/mattpocock/engineering/codebase-design",
+                "./skills/mattpocock/engineering/diagnosing-bugs",
+                "./skills/mattpocock/engineering/domain-modeling",
+                "./skills/mattpocock/engineering/grill-with-docs",
+                "./skills/mattpocock/engineering/implement",
+                "./skills/mattpocock/engineering/improve-codebase-architecture",
+                "./skills/mattpocock/engineering/prototype",
+                "./skills/mattpocock/engineering/research",
+                "./skills/mattpocock/engineering/resolving-merge-conflicts",
+                "./skills/mattpocock/engineering/setup-matt-pocock-skills",
+                "./skills/mattpocock/engineering/tdd",
+                "./skills/mattpocock/engineering/to-spec",
+                "./skills/mattpocock/engineering/to-tickets",
+                "./skills/mattpocock/engineering/triage",
+                "./skills/mattpocock/engineering/wayfinder",
+                "./skills/mattpocock/engineering/wizard",
+                "./skills/mattpocock/in-progress/claude-handoff",
+                "./skills/mattpocock/in-progress/implement-spec",
+                "./skills/mattpocock/in-progress/loop-me",
+                "./skills/mattpocock/in-progress/setup-ts-deep-modules",
+                "./skills/mattpocock/in-progress/writing-beats",
+                "./skills/mattpocock/in-progress/writing-fragments",
+                "./skills/mattpocock/in-progress/writing-shape",
+                "./skills/mattpocock/misc/git-guardrails-claude-code",
+                "./skills/mattpocock/misc/migrate-to-shoehorn",
+                "./skills/mattpocock/misc/scaffold-exercises",
+                "./skills/mattpocock/misc/setup-pre-commit",
+                "./skills/mattpocock/productivity/grill-me",
+                "./skills/mattpocock/productivity/grilling",
+                "./skills/mattpocock/productivity/handoff",
+                "./skills/mattpocock/productivity/teach",
+                "./skills/mattpocock/productivity/to-questionnaire",
+                "./skills/mattpocock/productivity/wait-what",
+                "./skills/mattpocock/productivity/writing-for-agents"
+            ]
+        }
+    ]
+}
