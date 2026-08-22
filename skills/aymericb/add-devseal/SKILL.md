@@ -36,9 +36,10 @@ Look at the target repo. Read what exists; don't assume:
 - Existing `devseal/` — already installed?
 - Existing `*.env.age`, `recipients.txt`, plaintext `secrets.env` locations
 - `.gitignore` (or directory-local ignore) coverage for plaintext `secrets.env`
+- Whether mise is in use — `mise.toml` / `.mise.toml` present, or `mise` on PATH
 - Platform assumption: macOS host with Secure Enclave (scripts refuse non-Darwin)
 
-**Done when:** you can state whether a Dev Container exists, whether devseal is already present, and where (if anywhere) encrypted secrets already live.
+**Done when:** you can state whether a Dev Container exists, whether devseal is already present, where (if anywhere) encrypted secrets already live, and whether mise is available.
 
 ### 2. Present findings and ask
 
@@ -54,6 +55,7 @@ Summarise what's present and what's missing, then ask using **AskQuestion** when
   | Where should `devseal/` be installed? | repo root (default), other                                     |
   | Wire Dev Container mount + `DEVSEAL_HOST`? | yes (default), no                                         |
   | Encrypt now?                          | scaffold only (default), encrypt now (Mac steps)               |
+  | Setup a mise secrets task?            | yes (default when mise present), no — **only ask if mise is installed** |
 
 Recommendation rules (for prefilling, not for skipping confirmation):
 - **Secrets path** — default `secrets/secrets.env.age`. If a `terraform/` layout already exists, prefer `terraform/secrets.env.age`.
@@ -61,6 +63,7 @@ Recommendation rules (for prefilling, not for skipping confirmation):
 - **Install `devseal/` at repo root** — yes.
 - **Wire Dev Container mount + `DEVSEAL_HOST`** — yes.
 - **Encrypt now** — only if the user already has a plaintext `secrets.env` (or is ready to paste values). Otherwise scaffold ignore + encrypt docs and leave ciphertext for later.
+- **mise secrets task** — if mise is installed, ask whether to add a `secrets` task; default yes.
 
 Also show this summary and **wait for explicit approval** before step 3:
 
@@ -74,6 +77,7 @@ Also show this summary and **wait for explicit approval** before step 3:
 |   Recipients          |   `<sibling recipients.txt>`|
 |   Plaintext (gitignored) | `<sibling secrets.env>`  |
 |   Dev Container       |   mount + `DEVSEAL_HOST`    |
+|   mise secrets task   |   yes / no / n/a            |
 
 Reply to proceed, or tell me what to change.
 ```
@@ -100,15 +104,28 @@ If the user wants changes, update the plan and ask again. Never infer approval f
 6. Ensure plaintext is gitignored: directory-local `.gitignore` next to the age file containing `secrets.env`.
 7. If `recipients.txt` is missing: do not invent a key. Document the Mac one-time `age-plugin-se keygen` steps (see [reference.md](reference.md)); the public key must be committed as `recipients.txt`.
 8. If encrypting now: instruct the human (on the Mac) to run `age -R <recipients> -o <secrets.env.age> secrets.env`. Do not run Touch ID decryption from inside the Linux container yourself.
+9. If the user approved a mise secrets task: add (or merge into) `mise.toml` / `.mise.toml`:
 
-**Done when:** `devseal/` scripts exist with matching `SECRETS_FILE`, Dev Container mount/env are present, and plaintext is ignored.
+```toml
+[tasks.secrets]
+description = "Decrypt secrets via devseal and open a shell with them loaded"
+raw = true
+run = """
+#!/usr/bin/env bash
+set -euo pipefail
+source <(./devseal/unseal.sh)
+exec "${SHELL:-bash}" -i
+"""
+```
+
+**Done when:** `devseal/` scripts exist with matching `SECRETS_FILE`, Dev Container mount/env are present, plaintext is ignored, and the mise secrets task is present when approved.
 
 ### 4. Verify
 
 - Dev Container JSON is valid JSON; mount and `DEVSEAL_HOST` are present
 - Both scripts resolve the same `SECRETS_FILE` (no leftover `__SECRETS_RELPATH__`)
 - Plaintext `secrets.env` is ignored; `*.age` and `recipients.txt` are tracked (or explicitly noted if the user chose otherwise)
-- Hand the user the remaining **human-only** Mac steps: brew install `age` + `age-plugin-se`, keygen if needed, `./devseal/host.sh serve`, rebuild/reopen Dev Container so the mount appears, then `source <(./devseal/unseal.sh)` inside the container
+- Hand the user the remaining **human-only** Mac steps: brew install `age` + `age-plugin-se`, keygen if needed, `./devseal/host.sh serve`, rebuild/reopen Dev Container so the mount appears, then `source <(./devseal/unseal.sh)` inside the container (or `mise run secrets` if that task was added)
 
 **Done when:** checklist above passes and the user has the Mac follow-ups.
 
