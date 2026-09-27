@@ -68,7 +68,7 @@ cleanup
 trap cleanup EXIT
 
 echo "Splitting skills/ from ${upstream_ref} (${upstream_sha})"
-git subtree split --prefix=skills -b "$split_branch" "$upstream_ref"
+git subtree split -q --prefix=skills -b "$split_branch" "$upstream_ref"
 
 before="$(git rev-parse HEAD)"
 git subtree pull --prefix="$prefix" . "$split_branch" \
@@ -78,7 +78,7 @@ if [[ "$(git rev-parse HEAD)" == "$before" ]]; then
     echo "${prefix} already up to date with ${upstream_ref} (${upstream_sha})"
 else
     echo "Updated ${prefix} to ${upstream_ref} (${upstream_sha}):"
-    git log --oneline --no-merges "${before}..HEAD" -- "$prefix" | head -20
+    git log --oneline --no-merges "${before}..HEAD" | head -20
 fi
 
 if [[ "$sync_marketplace" -eq 1 ]]; then
