@@ -42,4 +42,12 @@ git subtree pull --prefix=skills/mattpocock . mattpocock-skills-only
 git branch -D mattpocock-skills-only
 ```
 
+To update to the latest upstream version, run:
+
+```sh
+scripts/update-mattpocock-skills.sh
+```
+
+It adds the remote if needed, fetches, splits, and pulls the subtree. It also updates the `mattpocock-skills` list in `.claude-plugin/marketplace.json` to include every non-deprecated skill, and leaves that change uncommitted so you can review it. Pass `--no-marketplace` to skip the marketplace update.
+
 If git complains that the working tree has modifications, run `git update-index --refresh` and retry.
