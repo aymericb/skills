@@ -10,7 +10,8 @@
             "source": "./",
             "description": "Aymeric's Skills",
             "skills": [
-                "./skills/aymericb/add-devseal"
+                "./skills/aymericb/add-devseal",
+                "./skills/aymericb/setup-t3-service"
             ]
         },
         {

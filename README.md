@@ -6,7 +6,7 @@ I make no promise that this will work out for you; use at your own risks.
 
 ```
 skills/
-├── aymeric/      # My own skills
+├── aymericb/     # My own skills
 ├── mattpocock/   # Matt Pocock skills from https://github.com/mattpocock/skills.git
 ```
 
