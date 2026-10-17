@@ -1,0 +1,3 @@
+interface:
+  display_name: "Setup Socket Firewall"
+  short_description: "Route npm/cargo through sfw in a Dev Container"

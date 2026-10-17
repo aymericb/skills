@@ -11,7 +11,8 @@
             "description": "Aymeric's Skills",
             "skills": [
                 "./skills/aymericb/add-devseal",
-                "./skills/aymericb/setup-t3-service"
+                "./skills/aymericb/setup-t3-service",
+                "./skills/aymericb/setup-sfw"
             ]
         },
         {
